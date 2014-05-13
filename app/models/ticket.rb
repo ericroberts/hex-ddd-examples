@@ -3,4 +3,6 @@ class Ticket < ActiveRecord::Base
 
   validates :name, :email, presence: true
   validates :email, email: true
+
+  delegate :price, to: :ticket_price
 end
