@@ -8,5 +8,5 @@ env:
 script:
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake db:test:prepare
-  - bundle exec rspec spec/
+  - bundle exec rake
 bundler_args: --binstubs=./bundler_stubs --without development
