@@ -1,9 +1,15 @@
 AllCops:
   Exclude:
     - db/schema.rb
+    - bin/*
+    - config/*/*.rb
+    - config/*.rb
 
 SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: no_space
 
 AccessModifierIndentation:
   EnforcedStyle: outdent
+
+Documentation:
+  Enabled: false
