@@ -3,11 +3,13 @@ require 'spec_helper'
 describe TicketForm do
   subject { TicketForm.new(request) }
 
-  let(:request) {{
-    trip: trip,
-    price: ticket_price,
-    passengers: [passenger]
-  }}
+  let(:request) do
+    {
+      trip: trip,
+      price: ticket_price,
+      passengers: [passenger]
+    }
+  end
   let(:passenger)     { build :passenger }
   let(:trip)          { build :trip }
   let(:ticket_price)  { build :ticket_price, trip: trip, price: 500 }
@@ -71,8 +73,12 @@ describe TicketForm do
 
   context 'coercion' do
     it 'should turn an array of hashes into passengers' do
-      request[:passengers] = [{ name: 'Passenger', email: 'passenger@trips.com' }]
-      is_everyone_a_passenger = subject.passengers.all? { |p| p.is_a? Passenger }
+      request[:passengers] = [
+        { name: 'Passenger', email: 'passenger@trips.com' }
+      ]
+      is_everyone_a_passenger = subject.passengers.all? do |p|
+        p.is_a? Passenger
+      end
       expect(is_everyone_a_passenger).to be true
     end
   end
