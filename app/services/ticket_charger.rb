@@ -21,7 +21,7 @@ class TicketCharger
   end
 
   def charge!
-    charger.charge!
-    self.external_charge_id = 'blah'
+    charge = charger.charge!
+    self.external_charge_id = charge.id
   end
 end

@@ -59,12 +59,18 @@ describe TicketCharger do
 
     context 'success' do
       let(:charger) do
-        charger = double(:charger)
-        charger.stub(:charge!).and_return(OpenStruct.new(id: 'chargeid'))
+        charger = double()
+        allow(charger).to receive(:charge!).and_return(OpenStruct.new(id: 'chargeid'))
         charger
       end
 
-      before { subject.stub(:charger).and_return(charger) }
+      before { allow(subject).to receive(:charger).and_return(charger) }
+
+      it 'should tell the charger to charge the tickets' do
+        expect(subject.charger).to receive(:charge!)
+
+        subject.charge!
+      end
 
       it "should set each ticket's external charge id" do
         subject.charge!
@@ -81,10 +87,12 @@ describe TicketCharger do
         end
       end
 
-      it 'should tell the charger to charge the tickets' do
-        expect(subject.charger).to receive(:charge!)
-
+      it 'should set the external charge id to the id returned from the charger' do
         subject.charge!
+
+        subject.tickets.each do |ticket|
+          expect(ticket.external_charge_id).to eq 'chargeid'
+        end
       end
     end
   end
