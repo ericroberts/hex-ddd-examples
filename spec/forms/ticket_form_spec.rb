@@ -49,15 +49,15 @@ describe TicketForm do
   context 'valid request' do
 
     it 'should have an array of passengers' do
-      subject.passengers.should eq [passenger]
+      expect(subject.passengers).to eq [passenger]
     end
 
     it 'should have a trip' do
-      subject.trip.should eq trip
+      expect(subject.trip).to be trip
     end
 
     it 'should have a price' do
-      subject.price.should eq ticket_price
+      expect(subject.price).to be ticket_price
     end
   end
 
