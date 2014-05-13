@@ -12,9 +12,9 @@ class TicketForm
 protected
 
   def passengers_are_valid
-    valid_passengers = self.passengers.map(&:valid?)
-    unless self.passengers && valid_passengers.all?
-      self.errors.add :passengers, 'must all be valid'
+    valid_passengers = passengers.map(&:valid?)
+    unless passengers && valid_passengers.all?
+      errors.add :passengers, 'must all be valid'
     end
   end
 end
