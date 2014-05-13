@@ -1,0 +1,9 @@
+AllCops:
+  Exclude:
+    - db/schema.rb
+
+SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: no_space
+
+AccessModifierIndentation:
+  EnforcedStyle: outdent
