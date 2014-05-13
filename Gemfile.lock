@@ -204,7 +204,6 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   dotenv-rails
   factory_girl_rails
-  guard
   guard-rspec
   jquery-rails
   letter_opener
