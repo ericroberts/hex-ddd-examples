@@ -6,6 +6,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'money-rails'
 gem 'sass-rails', '~> 4.0.3'
+gem 'sqlite3'
 gem 'uglifier', '>= 1.3.0'
 gem 'virtus'
 
@@ -14,7 +15,6 @@ group :development do
   gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'quiet_assets'
-  gem 'sqlite3'
 end
 
 group :development, :test do
