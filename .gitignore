@@ -17,4 +17,9 @@
 
 # Ignore ruby-gemset and ruby-version
 /.ruby-*
+
+# Ignore test coverage stuff
 /coverage/*
+
+# Ignore env stuff
+/.env
