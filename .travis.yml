@@ -10,3 +10,6 @@ script:
   - bundle exec rake db:test:prepare
   - bundle exec rspec spec/
 bundler_args: --binstubs=./bundler_stubs --without development
+addons:
+  code_climate:
+    repo_token: 9d6f81c74251f7ea17429c4381d2fd4419a7a7c405f1ce5aebcdf1623b01a266
