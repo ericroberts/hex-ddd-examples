@@ -57,17 +57,20 @@ describe TicketCharger do
 
   describe '#charge!' do
 
-    context 'success' do
-      let(:charger) do
-        charger = double()
-        allow(charger).to receive(:charge!).and_return(OpenStruct.new(id: 'chargeid'))
-        charger
-      end
+    let(:charge) { OpenStruct.new(JSON.parse(File.read('spec/support/stripe/success.json'))) }
 
-      before { allow(subject).to receive(:charger).and_return(charger) }
+    let(:charger) do
+      charger = double
+      allow(charger).to receive(:purchase!).and_return(charge)
+      charger
+    end
+
+    before { allow(subject).to receive(:charger).and_return(charger) }
+
+    context 'success' do
 
       it 'should tell the charger to charge the tickets' do
-        expect(subject.charger).to receive(:charge!)
+        expect(subject.charger).to receive(:purchase!)
 
         subject.charge!
       end
@@ -87,13 +90,17 @@ describe TicketCharger do
         end
       end
 
-      it 'should set the external charge id to the id returned from the charger' do
+      it 'should set the charge id to the id returned from the charger' do
         subject.charge!
 
         subject.tickets.each do |ticket|
-          expect(ticket.external_charge_id).to eq 'chargeid'
+          expect(ticket.external_charge_id).to eq charge.id
         end
       end
+    end
+
+    context 'failure' do
+
     end
   end
 end

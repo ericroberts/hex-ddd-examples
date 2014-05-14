@@ -2,10 +2,9 @@ class TicketCharger
   include Virtus.model
   include ActiveModel::Validations
 
-  attr_reader :charger
-
   attribute :tickets, [Ticket]
   attribute :token, String
+  attribute :charger, Charger
 
   validates :tickets, :token, presence: true
 
@@ -21,7 +20,7 @@ class TicketCharger
   end
 
   def charge!
-    charge = charger.charge!
+    charge = charger.purchase!
     self.external_charge_id = charge.id
   end
 end
