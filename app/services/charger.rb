@@ -2,22 +2,23 @@ class Charger
   include Virtus.model
   include ActiveModel::Validations
 
-  attribute :card, String
+  attribute :token, String
   attribute :amount, Money
   attribute :description, String
   attribute :charge, Charge
+  attribute :error, Stripe::CardError
 
-  validates :card, :amount, presence: true
+  validates :token, :amount, presence: true
 
   def purchase!
-    Stripe::Charge.create
-    self.charge = Charge.new
+    self.charge = Stripe::Charge.create(
+      amount: amount.cents,
+      currency: amount.currency.to_s,
+      card: token
+    )
+    true
+  rescue Stripe::CardError => e
+    self.error = e
+    false
   end
 end
-
-# charge = Stripe::Charge.create(
-#       card: token,
-#       amount: total.cents,
-#       description: "Registration by #{self.full_name} (#{self.email}) for #{self.course.name}",
-#       currency: self.course.total.currency
-#     )
