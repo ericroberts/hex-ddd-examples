@@ -11,13 +11,19 @@ describe Charger do
   end
   let(:card) do
     {
-      number: 4242424242424242,
+      number: '42' * 8,
       exp_month: 12,
       exp_year: Date.today.year + 2,
       cvc: 123
     }
   end
-  let(:token) { OpenStruct.new(JSON.parse(File.read('spec/support/stripe/token.json'))) }
+  let(:token) do
+    OpenStruct.new(
+      JSON.parse(
+        File.read('spec/support/stripe/token.json')
+      )
+    )
+  end
   # Uncomment this if you want to actually test against Stripe API
   # let(:token) { Stripe::Token.create(card: card) }
 
@@ -57,13 +63,13 @@ describe Charger do
   end
 
   describe '#purchase!' do
-    let(:purchase_args) {
+    let(:purchase_args) do
       {
         amount: amount.cents,
         currency: amount.currency.to_s,
         card: token.id
       }
-    }
+    end
     let(:result) { true }
 
     # Comment this out to test against Stripe API
@@ -76,7 +82,11 @@ describe Charger do
 
     context 'success' do
       let(:result) do
-        OpenStruct.new(JSON.parse(File.read('spec/support/stripe/success.json')))
+        OpenStruct.new(
+          JSON.parse(
+            File.read('spec/support/stripe/success.json')
+          )
+        )
       end
 
       it 'should create a new charge object' do
