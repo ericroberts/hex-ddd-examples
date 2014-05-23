@@ -57,15 +57,11 @@ describe TicketCharger do
 
   describe '#charge!' do
 
-    let(:charge) { OpenStruct.new(JSON.parse(File.read('spec/support/stripe/success.json'))) }
+    before { allow(Stripe::Charge).to receive(:create).and_return(result) }
 
-    let(:charger) do
-      charger = double
-      allow(charger).to receive(:purchase!).and_return(charge)
-      charger
+    let(:result) do
+      OpenStruct.new(JSON.parse(File.read('spec/support/stripe/success.json')))
     end
-
-    before { allow(subject).to receive(:charger).and_return(charger) }
 
     context 'success' do
 
@@ -94,13 +90,12 @@ describe TicketCharger do
         subject.charge!
 
         subject.tickets.each do |ticket|
-          expect(ticket.external_charge_id).to eq charge.id
+          expect(ticket.external_charge_id).to eq result.id
         end
       end
     end
 
     context 'failure' do
-
     end
   end
 end

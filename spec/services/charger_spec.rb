@@ -2,13 +2,24 @@ require 'spec_helper'
 
 describe Charger do
   subject { Charger.new(args) }
+  let(:amount) { 100.to_money }
   let(:args) do
     {
-      amount: 100.to_money,
-      card: token.id
+      amount: amount,
+      token: token.id
+    }
+  end
+  let(:card) do
+    {
+      number: 4242424242424242,
+      exp_month: 12,
+      exp_year: Date.today.year + 2,
+      cvc: 123
     }
   end
   let(:token) { OpenStruct.new(JSON.parse(File.read('spec/support/stripe/token.json'))) }
+  # Uncomment this if you want to actually test against Stripe API
+  # let(:token) { Stripe::Token.create(card: card) }
 
   it 'should initialize without error' do
     expect { subject }.to_not raise_error
@@ -35,32 +46,59 @@ describe Charger do
       args.delete(:amount)
     end
 
-    it 'should not be valid without a card' do
-      args.delete(:card)
+    it 'should not be valid without a token' do
+      args.delete(:token)
     end
 
-    it 'should not be valid without card or amount' do
+    it 'should not be valid without token or amount' do
       args.delete(:amount)
-      args.delete(:card)
+      args.delete(:token)
     end
   end
 
   describe '#purchase!' do
-    before { allow(Stripe::Charge).to receive(:create) }
+    let(:purchase_args) {
+      {
+        amount: amount.cents,
+        currency: amount.currency.to_s,
+        card: token.id
+      }
+    }
+    let(:result) { true }
+
+    # Comment this out to test against Stripe API
+    before { allow(Stripe::Charge).to receive(:create).and_return(result) }
 
     it 'should tell stripe to create a charge' do
-      expect(Stripe::Charge).to receive(:create)
+      expect(Stripe::Charge).to receive(:create).with(purchase_args)
       subject.purchase!
     end
 
     context 'success' do
+      let(:result) do
+        OpenStruct.new(JSON.parse(File.read('spec/support/stripe/success.json')))
+      end
+
       it 'should create a new charge object' do
         expect(subject.charge).to_not be_present
         subject.purchase!
         expect(subject.charge).to be_present
       end
     end
+
+    context 'failure' do
+      let(:error) { Stripe::CardError.new('error message', '_', '_', '_') }
+
+      before { allow(Stripe::Charge).to receive(:create).and_raise(error) }
+
+      it 'should not raise an error' do
+        expect { subject.purchase! }.to_not raise_error
+      end
+
+      it 'should set the charger error to the error' do
+        subject.purchase!
+        expect(subject.error).to eq error
+      end
+    end
   end
 end
-
-

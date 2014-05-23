@@ -8,6 +8,10 @@ class TicketCharger
 
   validates :tickets, :token, presence: true
 
+  def charger
+    @charger ||= Charger.new(amount: total, token: token)
+  end
+
   def total
     tickets.map(&:price).sum
   end
@@ -20,7 +24,11 @@ class TicketCharger
   end
 
   def charge!
-    charge = charger.purchase!
-    self.external_charge_id = charge.id
+    if charger.purchase!
+      self.external_charge_id = charger.charge.id
+      true
+    else
+      false
+    end
   end
 end
