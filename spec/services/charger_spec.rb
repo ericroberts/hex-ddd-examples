@@ -81,13 +81,7 @@ describe Charger do
     end
 
     context 'success' do
-      let(:result) do
-        OpenStruct.new(
-          JSON.parse(
-            File.read('spec/support/stripe/success.json')
-          )
-        )
-      end
+      let(:result) { stripe_success }
 
       it 'should create a new charge object' do
         expect(subject.charge).to_not be_present

@@ -59,9 +59,7 @@ describe TicketCharger do
 
     before { allow(Stripe::Charge).to receive(:create).and_return(result) }
 
-    let(:result) do
-      OpenStruct.new(JSON.parse(File.read('spec/support/stripe/success.json')))
-    end
+    let(:result) { stripe_success }
 
     context 'success' do
 
