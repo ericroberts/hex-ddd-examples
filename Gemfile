@@ -32,3 +32,6 @@ group :development, :test do
   gem 'terminal-notifier-guard', require: false
 end
 
+group :test do
+  gem 'codeclimate-test-reporter', require: false
+end
